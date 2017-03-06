@@ -7,3 +7,4 @@ class INode(ABC):
     @abstractmethod
     def getValue(self):
         pass
+    

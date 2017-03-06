@@ -4,7 +4,7 @@ from INode import INode
 class ValueNode(INode):
     ''' Nodes for storing values, allows setting of values'''
     
-    def __init__(self, value):
+    def __init__(self, value = 'EmptyNode'):
         self.value = value
         
     def setValue(self, value):

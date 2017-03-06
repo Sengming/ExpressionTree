@@ -1,14 +1,12 @@
 #OperatorClass
 from INode import INode
+from abc import ABC
 
-class OperatorNode(INode):
-    ''' Class for different operators. '''
+class IOperatorNode(INode, ABC):
+    ''' Abstract Class for different operators. '''
     def __init__(self, rightNode, leftNode):
         self._rightNode = rightNode
         self._leftNode = leftNode
-        
-    def getValue(self):
-        pass
     
     def getLeftNode(self):
         return self._leftNode
@@ -21,3 +19,27 @@ class OperatorNode(INode):
     
     def setRightNode(self, newRightNode):
         self._rightNode = newRightNode
+        
+        
+class AdditionOperator(IOperatorNode):
+    ''' Class for addition operator'''
+    def __init__(self, rightNode, leftNode):
+        IOperatorNode.__init__(self, rightNode, leftNode)
+        self._value = 0
+        
+    def getValue(self):
+        evaluated = self._leftNode.getValue() + self._rightNode.getValue()
+        return evaluated
+ 
+    
+class MultiplicationOperator(IOperatorNode):
+    ''' Class for Multiplication operator'''
+    def __init__(self, rightNode, leftNode):
+        IOperatorNode.__init__(self, rightNode, leftNode)
+        self._value = 0
+        
+    def getValue(self):
+        evaluated = self._leftNode.getValue() * self._rightNode.getValue()
+        return evaluated
+    
+    
