@@ -26,6 +26,7 @@ class AdditionOperator(IOperatorNode):
     def __init__(self, rightNode, leftNode):
         IOperatorNode.__init__(self, rightNode, leftNode)
         self._value = 0
+        self.order = 0
         
     def getValue(self):
         evaluated = self._leftNode.getValue() + self._rightNode.getValue()
@@ -37,9 +38,15 @@ class MultiplicationOperator(IOperatorNode):
     def __init__(self, rightNode, leftNode):
         IOperatorNode.__init__(self, rightNode, leftNode)
         self._value = 0
+        self.order = 1
         
     def getValue(self):
         evaluated = self._leftNode.getValue() * self._rightNode.getValue()
         return evaluated
     
     
+class OperatorTypeStorage:
+        def __init__(self):
+            self.operatorList = ['+', '*']
+            self.startBracket = ['(']
+            self.endBracket = [')']

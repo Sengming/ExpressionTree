@@ -16,9 +16,6 @@ class INodeLinker(ABC):
 class NodeLinker(ABC):
     ''' Nodelinker to link together nodes. Cooperates with factory'''
     
-    def __init__(self):
-        self._currentNode = ValueNode()
-    
     def appendCurrentOperatorHead(self, currentOpNode = ValueNode(), newHead):
         temp = newHead.getLeftNode()
         currentOpNode.setLeftNode(temp)

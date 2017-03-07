@@ -4,6 +4,7 @@ import argparse
 from INode import INode
 from ValueNode import ValueNode
 from OperatorNode import IOperatorNode
+from OperatorNode import OperatorTypeStorage
 from NodeFactory import NodeFactory
 
 def main():
@@ -14,8 +15,9 @@ def main():
     print(args.echo)
     node1, node2 = ValueNode(100), ValueNode(300)
     
+    opStorage = OperatorTypeStorage()
     #operatorNode = OperatorNode(node1, node2)
-    factory = NodeFactory()
+    factory = NodeFactory(opStorage)
     
     resultNode = factory.makeOperatorNode("*", node1, node2)
     print(resultNode.getValue())
