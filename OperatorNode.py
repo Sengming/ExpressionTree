@@ -29,7 +29,7 @@ class AdditionOperator(IOperatorNode):
         self.order = 0
         
     def getValue(self):
-        evaluated = self._leftNode.getValue() + self._rightNode.getValue()
+        evaluated = self._rightNode.getValue() + self._leftNode.getValue()
         return evaluated
  
     
@@ -41,7 +41,7 @@ class MultiplicationOperator(IOperatorNode):
         self.order = 1
         
     def getValue(self):
-        evaluated = self._leftNode.getValue() * self._rightNode.getValue()
+        evaluated = self._rightNode.getValue() * self._leftNode.getValue()
         return evaluated
     
     

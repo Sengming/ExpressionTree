@@ -19,3 +19,13 @@ class Stack:
     
     def isEmpty(self):
         return self.stackData == []
+    
+    def peek(self):
+        return self.stackData[len(self.stackData)-1]
+    
+    def reverse(self):
+        return self.stackData.reverse()
+    
+    def emptyStack(self):
+        self.size = 0
+        self.stackData.clear()
