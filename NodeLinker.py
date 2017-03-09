@@ -16,13 +16,13 @@ class INodeLinker(ABC):
 class NodeLinker(ABC):
     ''' Nodelinker to link together nodes. Cooperates with factory'''
     
-    def appendCurrentOperatorHead(self, currentOpNode = ValueNode(), newHead):
+    def appendCurrentOperatorHead(self, currentOpNode, newHead):
         temp = newHead.getLeftNode()
         currentOpNode.setLeftNode(temp)
         newHead.setLeftNode(currentOpNode)
         return newHead
     
-    #shifts if right affinity
+    #shifts if right larger priority
     def appendCurrentOperatorRight(self, oldRight, newRight):
         temp = oldRight.getRightNode()
         oldRight.setRightNode(newRight)

@@ -164,15 +164,41 @@ class Parser_appendPairState(IStackParserState):
                
     def executeState(self, stack):
         
+        # if it's a value node, append differently. Only happens in the beginning
         if type(self._argList.currentHead) is ValueNode:
             self._argList.tempOp.setLeftNode(self._argList.currentHead)
             self._argList.previousOp = self._argList.tempOp
             self._argList.currentHead = self._argList.tempOp
             self._argList.tempOp = None
         else:
-            if self._argList.tempOp.affinity > 
-            while type(rightNode) is not ValueNode:
+            if self._argList.tempOp.priority >= self._argList.previousOp.priority:
+                self._argList.previousOp = self.appendCurrentOperatorRight(self._argList.previousOp, self._argList.tempOp)
+            else:
+                self.appendCurrentOperatorHead(self._argList.previousOp, self._argList.tempOp)
+#             while type(rightNode) is not ValueNode:
             
+    
+    def appendCurrentOperatorHead(self, currentOpNode, newHead):
+        temp = newHead.getLeftNode()
+        currentOpNode.setLeftNode(temp)
+        newHead.setLeftNode(currentOpNode)
+        return newHead
+    
+    #shifts if right larger priority
+    def appendCurrentOperatorRight(self, oldRight, newRight):
+        temp = oldRight.getRightNode()
+        oldRight.setRightNode(newRight)
+        newRight.setLeftNode(temp)
+        return newRight
+    
+    def getRightLeafParent(self, headNode):
+        retVal = None
+        if type(headNode.getRightNode()) is not ValueNode:
+            retVal = getRightLeafParent(headNode.getRightNode())
+        else:
+            retVal = headNode
+        return retVal
+        
     
     def passArgsForward(self):
         self._nextState.setArgList(self._argList)

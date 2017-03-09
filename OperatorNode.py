@@ -26,7 +26,7 @@ class AdditionOperator(IOperatorNode):
     def __init__(self, rightNode, leftNode):
         IOperatorNode.__init__(self, rightNode, leftNode)
         self._value = 0
-        self.affinity = 0
+        self.priority = 0
         
     def getValue(self):
         evaluated = self._rightNode.getValue() + self._leftNode.getValue()
@@ -38,7 +38,7 @@ class MultiplicationOperator(IOperatorNode):
     def __init__(self, rightNode, leftNode):
         IOperatorNode.__init__(self, rightNode, leftNode)
         self._value = 0
-        self.affinity = 1
+        self.priority = 1
         
     def getValue(self):
         evaluated = self._rightNode.getValue() * self._leftNode.getValue()
