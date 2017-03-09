@@ -21,9 +21,10 @@ class NodeLinker(ABC):
         currentOpNode.setLeftNode(temp)
         newHead.setLeftNode(currentOpNode)
         return newHead
-        
-    def appendCurrentOperatorRight(self, currentOpNode, newRight):
-        temp = currentOpNode.getRightNode()
-        currentOpNode.setRightNode(newRight)
+    
+    #shifts if right affinity
+    def appendCurrentOperatorRight(self, oldRight, newRight):
+        temp = oldRight.getRightNode()
+        oldRight.setRightNode(newRight)
         newRight.setLeftNode(temp)
-        return currentOpNode
+        return oldRight
