@@ -10,28 +10,33 @@ from ValueNode import ValueNode
 
 class StringParser:
     ''' Parses a given string, takes a nodelinker interface'''
-    def __init__(self, iNodeFactory, iStackParser, bracketStack, mainStack):
+    def __init__(self, iNodeFactory, iStackParser, bracketStack, mainStack, opList):
         self._factory = iNodeFactory
         self._parser  = iStackParser
         self._bracketStack = bracketStack
         self._mainStack = mainStack
         self._currentNode = None
         self._previousOperator = None
+        self._opStorage = opList
         
     def parseString(self, stringToParse):
-        ''' Main method used to populate the stack with Node objects '''        
+        ''' Main method used to populate the stack with Node objects ''' 
+        retVal = None       
         for symbol in stringToParse:
             if self.is_endBracket(symbol) is False:
                 if self.is_operator(symbol) is True:
                     self.parseOperator(symbol)
+                    print("parsing operator")
                 elif self.is_number(symbol) is True:
                     self.parseValue(symbol)
+                    print("parsing value")
             elif self.is_endBracket(symbol) is True:
-                self._mainStack.push(self.parseEndBracket())
+                retVal = self._mainStack.push(self.parseEndBracket())
         
-        if self._bracketStack.isEmpty() is False:
-            self.parseEntireStack()
-             
+        if self._mainStack.isEmpty() is False:
+            print("parsing whole stack now")
+            retVal = self.parseEntireStack()
+        return retVal
               
     def parseOperator(self, operator):
         ''' Uses the factory to create new node and add to the main stack '''

@@ -19,7 +19,7 @@ class NodeFactory(INodeFactory):
     def __init__(self, operatorTypeStorage):
         self.operators = operatorTypeStorage
           
-    def makeOperatorNode(self, nodeType, rightNode, leftNode):
+    def makeOperatorNode(self, nodeType, rightNode = None, leftNode = None):
         if nodeType in self.operators.operatorList:
             if nodeType is self.operators.operatorList[0]:
                 return AdditionOperator(rightNode, leftNode)

@@ -18,8 +18,7 @@ class IStackParser(ABC):
 class StackParser(IStackParser):
     ''' The main class used to parse stack given to it by the string parser '''
     
-    def __init__(self, linker, operatorList, stateList):
-        self._linker = linker
+    def __init__(self, operatorList, stateList):
         self._operatorList = operatorList
         self._previousOperator = None
         self._currentHead = None
@@ -29,16 +28,18 @@ class StackParser(IStackParser):
     def parseStack(self, stackToParse):
         self._stateMachine.resetStateMachine()
         self._stateMachine.setStack(stackToParse)
-        previousOperator = None
-        currentHead = None
-        assembledHead = None
-        ''' Handles the linking and parsing of nodes in the stack ''' 
-        while stackToParse.isEmpty() is False:
-            self._stateMachine.executeCurrentState()
-            self._stateMachine.moveToNextState()
-        else:
-            self._stateMachine.resetStateMachine()
+#         stackToParse.printWholeStack()
         
+        ''' Handles the linking and parsing of nodes in the stack ''' 
+        while True:
+            retVal = self._stateMachine.executeCurrentState()
+            self._stateMachine.moveToNextState()
+            if retVal is 0:
+                self._stateMachine.resetStateMachine()
+                break
+        
+        return retVal
+    
 class StackParserMachine():
     ''' Stack parser state machine context. Accepts a list of states. Construction logic is separate'''
     def __init__(self, stateList):
@@ -46,6 +47,9 @@ class StackParserMachine():
         self._currentState = self._stateList[0]
         self._stack = None
         
+    def getCurrentState(self):
+        return self._currentState
+
     def resetStateMachine(self):
         self._currentState = self._stateList[0]
         self._stack = None
@@ -86,16 +90,16 @@ class IStackParserState(ABC):
     
 class Parser_idleState(IStackParserState):
     ''' Parser's idle state '''
-    def __init__(self, nextState):
+    def __init__(self, nextState = None):
         self._nextState = nextState
         self._argList = ParserArgs()
     
     def executeState(self, stack):
+        print("Parser_IdleState")
         self._argList.currentHead = None
         self._argList.previousOp = None
         self._argList.tempOp = None
         self.passArgsForward()
-        pass
     
     def passArgsForward(self):
         self._nextState.setArgList(self._argList)
@@ -111,13 +115,16 @@ class Parser_idleState(IStackParserState):
     
 class Parser_initialElementState(IStackParserState):
     ''' Parser's state where it makes single element'''
-    def __init__(self, nextState):
+    def __init__(self, nextState = None):
         self._nextState = nextState
         self._argList = None
         
     def executeState(self, stack):
+        print("Parser_InitialElementState")
         self._argList.currentHead = stack.pop()
+        print(self._argList.currentHead.getValue())
         self.passArgsForward()
+        return None
     
     def passArgsForward(self):
         self._nextState.setArgList(self._argList)
@@ -133,16 +140,21 @@ class Parser_initialElementState(IStackParserState):
     
 class Parser_makePairState(IStackParserState):
     ''' We make a temp pair of elements to add to main tree'''
-    def __init__(self, nextState):
+    def __init__(self, nextState = None):
         self._nextState = nextState
         self._argList = None
                
     def executeState(self, stack):
+        print("Parser_makePairState")
+        if stack.isEmpty() is True:
+            return 0
         opNode = stack.pop()
         valNode = stack.pop()
         opNode.setRightNode(valNode)
+        print("MakePairstate currenthead value: " + self._argList.currentHead.getValue())
         self._argList.tempOp = opNode
         self.passArgsForward()
+        return None
     
     def passArgsForward(self):
         self._nextState.setArgList(self._argList)
@@ -158,23 +170,26 @@ class Parser_makePairState(IStackParserState):
     
 class Parser_appendPairState(IStackParserState):
     ''' Append the pair of elements to the main tree, depending on operator precedence '''
-    def __init__(self, nextState):
+    def __init__(self, nextState = None):
         self._nextState = nextState
         self._argList = None
                
     def executeState(self, stack):
-        
+        print("Parser_appendPairState")
         # if it's a value node, append differently. Only happens in the beginning
         if type(self._argList.currentHead) is ValueNode:
+            print("appendtoValueNode")
             self._argList.tempOp.setLeftNode(self._argList.currentHead)
             self._argList.previousOp = self._argList.tempOp
             self._argList.currentHead = self._argList.tempOp
             self._argList.tempOp = None
         else:
-            if self._argList.tempOp.priority >= self._argList.previousOp.priority:
+            if self._argList.tempOp.priority > self._argList.previousOp.priority:
                 self._argList.previousOp = self.appendCurrentOperatorRight(self._argList.previousOp, self._argList.tempOp)
             else:
-                self.appendCurrentOperatorHead(self._argList.previousOp, self._argList.tempOp)
+                self._argList.currentHead = self.appendCurrentOperatorHead(self._argList.currentHead, self._argList.tempOp)
+        self.passArgsForward()
+        return self._argList.currentHead
 #             while type(rightNode) is not ValueNode:
             
     
@@ -194,7 +209,7 @@ class Parser_appendPairState(IStackParserState):
     def getRightLeafParent(self, headNode):
         retVal = None
         if type(headNode.getRightNode()) is not ValueNode:
-            retVal = getRightLeafParent(headNode.getRightNode())
+            retVal = self.getRightLeafParent(headNode.getRightNode())
         else:
             retVal = headNode
         return retVal

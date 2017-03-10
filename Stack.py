@@ -29,3 +29,8 @@ class Stack:
     def emptyStack(self):
         self.size = 0
         self.stackData.clear()
+        
+    #debug
+    def printWholeStack(self):
+        for value in self.stackData:
+            print("item in stack:" + value.getValue())
