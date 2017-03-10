@@ -33,10 +33,11 @@ class StackParser(IStackParser):
         ''' Handles the linking and parsing of nodes in the stack ''' 
         while True:
             retVal = self._stateMachine.executeCurrentState()
-            self._stateMachine.moveToNextState()
-            if retVal is 0:
+            if self._stateMachine.checkExitCondition() is True:
                 self._stateMachine.resetStateMachine()
                 break
+            else:
+                self._stateMachine.moveToNextState()
         
         return retVal
     
@@ -60,6 +61,9 @@ class StackParserMachine():
     def executeCurrentState(self):
         return self._currentState.executeState(self._stack)
     
+    def checkExitCondition(self):
+        return self._currentState.checkExitCondition()
+    
     def moveToNextState(self):
         self._currentState = self._currentState.getNextState()
         
@@ -74,6 +78,10 @@ class IStackParserState(ABC):
     
     @abstractmethod
     def passArgsForward(self):
+        pass
+    
+    @abstractmethod
+    def checkExitCondition(self):
         pass
     
     @abstractmethod
@@ -112,6 +120,9 @@ class Parser_idleState(IStackParserState):
     
     def setNextState(self, state):
         self._nextState = state
+        
+    def checkExitCondition(self):
+        return False
     
 class Parser_initialElementState(IStackParserState):
     ''' Parser's state where it makes single element'''
@@ -137,6 +148,9 @@ class Parser_initialElementState(IStackParserState):
     
     def setNextState(self, state):
         self._nextState = state
+        
+    def checkExitCondition(self):
+        return False
     
 class Parser_makePairState(IStackParserState):
     ''' We make a temp pair of elements to add to main tree'''
@@ -146,12 +160,10 @@ class Parser_makePairState(IStackParserState):
                
     def executeState(self, stack):
         print("Parser_makePairState")
-        if stack.isEmpty() is True:
-            return 0
         opNode = stack.pop()
         valNode = stack.pop()
         opNode.setRightNode(valNode)
-        print("MakePairstate currenthead value: " + self._argList.currentHead.getValue())
+#         print("MakePairstate currenthead value: " + self._argList.currentHead.getValue())
         self._argList.tempOp = opNode
         self.passArgsForward()
         return None
@@ -167,15 +179,20 @@ class Parser_makePairState(IStackParserState):
     
     def setNextState(self, state):
         self._nextState = state
+        
+    def checkExitCondition(self):
+        return False
     
 class Parser_appendPairState(IStackParserState):
     ''' Append the pair of elements to the main tree, depending on operator precedence '''
     def __init__(self, nextState = None):
         self._nextState = nextState
         self._argList = None
+        self._stack = None
                
     def executeState(self, stack):
         print("Parser_appendPairState")
+        self._stack = stack
         # if it's a value node, append differently. Only happens in the beginning
         if type(self._argList.currentHead) is ValueNode:
             print("appendtoValueNode")
@@ -184,18 +201,26 @@ class Parser_appendPairState(IStackParserState):
             self._argList.currentHead = self._argList.tempOp
             self._argList.tempOp = None
         else:
-            if self._argList.tempOp.priority > self._argList.previousOp.priority:
+            if self._argList.tempOp.priority >= self._argList.previousOp.priority:
                 self._argList.previousOp = self.appendCurrentOperatorRight(self._argList.previousOp, self._argList.tempOp)
+                print("nextOperatorisBigger")
             else:
                 self._argList.currentHead = self.appendCurrentOperatorHead(self._argList.currentHead, self._argList.tempOp)
+                self._argList.previousOp = self._argList.currentHead
+                print("nextOperatorisSmaller")
+#                 print("currentHead: " + self._argList.currentHead.getValue())
         self.passArgsForward()
         return self._argList.currentHead
-#             while type(rightNode) is not ValueNode:
-            
-    
+
+    def checkExitCondition(self):
+        retVal = False
+        if self._stack.isEmpty() is True:
+            retVal =  True
+        else:
+            retVal = False
+        return retVal
+             
     def appendCurrentOperatorHead(self, currentOpNode, newHead):
-        temp = newHead.getLeftNode()
-        currentOpNode.setLeftNode(temp)
         newHead.setLeftNode(currentOpNode)
         return newHead
     

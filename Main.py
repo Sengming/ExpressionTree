@@ -39,6 +39,7 @@ def main():
     returnNode = stringParser.parseString(args.string)
     
     print(returnNode.getValue())
+#     print(returnNode)
 #     resultNode = factory.makeOperatorNode("*", node1, node2)
 #     print(resultNode.getValue())
 #     operatorNode = factory.makeOperatorNode("PLUS", node1, node2)

@@ -29,8 +29,14 @@ class AdditionOperator(IOperatorNode):
         self.priority = 0
         
     def getValue(self):
-        evaluated = self._rightNode.getValue() + self._leftNode.getValue()
+        evaluated = int(self._rightNode.getValue()) + int(self._leftNode.getValue())
+        print("AdditionOperator: " + str(evaluated))
         return evaluated
+#     def getValue(self):
+# #         evaluated = int(self._rightNode.getValue()) + int(self._leftNode.getValue())
+#         print("Right Node val: " + self._rightNode.getValue() + "Left Node val: "+ self._leftNode.getValue())
+#         evaluated = "+"
+#         return evaluated
  
     
 class MultiplicationOperator(IOperatorNode):
@@ -41,7 +47,8 @@ class MultiplicationOperator(IOperatorNode):
         self.priority = 1
         
     def getValue(self):
-        evaluated = self._rightNode.getValue() * self._leftNode.getValue()
+        evaluated = int(self._rightNode.getValue()) * int(self._leftNode.getValue())
+        print("MultiplicationOperator: " + str(evaluated))
         return evaluated
     
     
