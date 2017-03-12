@@ -34,7 +34,7 @@ class AdditionOperator(IOperatorNode):
         return evaluated
 #     def getValue(self):
 # #         evaluated = int(self._rightNode.getValue()) + int(self._leftNode.getValue())
-#         print("Right Node val: " + self._rightNode.getValue() + "Left Node val: "+ self._leftNode.getValue())
+# #         print("Right Node val: " + self._rightNode.getValue() + "Left Node val: "+ self._leftNode.getValue())
 #         evaluated = "+"
 #         return evaluated
  
@@ -50,10 +50,23 @@ class MultiplicationOperator(IOperatorNode):
         evaluated = int(self._rightNode.getValue()) * int(self._leftNode.getValue())
         print("MultiplicationOperator: " + str(evaluated))
         return evaluated
+
+#     def getValue(self):
+#         evaluated = "*"
+#         return evaluated
     
+class DummyOperator(IOperatorNode):
+    ''' Lowest priority "dummy" operator '''
+    def __init__(self):
+        IOperatorNode.__init__(self, None, None)
+        self._value = 0
+        self.priority = -1
+        
+    def getValue(self):
+        return self._value
     
 class OperatorTypeStorage:
         def __init__(self):
             self.operatorList = ['+', '*']
-            self.startBracket = ['(']
-            self.endBracket = [')']
+            self.startBracket = '('
+            self.endBracket = ')'

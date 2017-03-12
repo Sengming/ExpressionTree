@@ -12,3 +12,13 @@ class ValueNode(INode):
         
     def getValue(self):
         return self.value
+    
+class StartBracketNode(INode):
+    ''' Dummy node to denote(pun intended)a start bracket node. Should not be included in any tree parse stack'''
+    
+    def __init__(self):
+        self.value = '('
+        
+    def getValue(self):
+        return self.value
+        

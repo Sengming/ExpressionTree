@@ -6,6 +6,7 @@ from ValueNode import ValueNode
 from OperatorNode import AdditionOperator
 from OperatorNode import MultiplicationOperator
 from OperatorNode import OperatorTypeStorage
+from OperatorNode import DummyOperator
 
 class IStackParser(ABC):
     ''' Handles the parsing of a given stack, allows us to mock out stack parser '''
@@ -104,9 +105,9 @@ class Parser_idleState(IStackParserState):
     
     def executeState(self, stack):
         print("Parser_IdleState")
-        self._argList.currentHead = None
-        self._argList.previousOp = None
-        self._argList.tempOp = None
+        self._argList.currentHead = DummyOperator()
+        self._argList.previousOp = DummyOperator()
+        self._argList.tempOp = DummyOperator()
         self.passArgsForward()
     
     def passArgsForward(self):

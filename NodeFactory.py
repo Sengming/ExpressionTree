@@ -3,6 +3,7 @@ from OperatorNode import AdditionOperator
 from OperatorNode import MultiplicationOperator
 from abc import ABC, abstractmethod
 from ValueNode import ValueNode
+from ValueNode import StartBracketNode
 
 class INodeFactory(ABC):
     '''Interface factory class for us to create mock factory'''
@@ -31,4 +32,7 @@ class NodeFactory(INodeFactory):
         
     def makeValueNode(self, value):
         return ValueNode(value)
+    
+    def makeStartBracketNode(self):
+        return StartBracketNode()
         

@@ -7,6 +7,7 @@ from NodeFactory import NodeFactory
 from Stack import Stack
 from StackParser import StackParser
 from ValueNode import ValueNode
+from ValueNode import StartBracketNode
 
 class StringParser:
     ''' Parses a given string, takes a nodelinker interface'''
@@ -30,6 +31,8 @@ class StringParser:
                 elif self.is_number(symbol) is True:
                     self.parseValue(symbol)
                     print("parsing value")
+                elif self.is_startBracket(symbol) is True:
+                    self.parseStartBracket()
             elif self.is_endBracket(symbol) is True:
                 retVal = self._mainStack.push(self.parseEndBracket())
         
@@ -58,21 +61,27 @@ class StringParser:
 #     
     def parseEndBracket(self):
         ''' If we hit an end bracket, pop the stack until the first start-bracket hit, and send to parser for evaluation '''
-        
+        print("parsing and handling end bracket")
         # Clear the bracket stack before sending
         self._bracketStack.emptyStack()
         mainStackVal = self._mainStack.pop()
         
-        while self.is_startBracket(mainStackVal) is False and self._mainStack.isEmpty() is False:
+        while type(mainStackVal) is not StartBracketNode and self._mainStack.isEmpty() is False:
             self._bracketStack.push(mainStackVal)
             mainStackVal = self._mainStack.pop()
         
         # Stack comes out in the wrong order
         self._bracketStack.reverse()
         
+#         self._bracketStack.printWholeStack()
+        
         # Return the evaluated stack. This should be a node.
         return self._parser.parseStack(self._bracketStack)
 
+    def parseStartBracket(self):
+        tempBracketNode = self._factory.makeStartBracketNode()
+        self._mainStack.push(tempBracketNode)
+    
     def parseEntireStack(self):
         ''' After evaluating everything, parse the entire stack, assuming there are no longer any brackets within it '''
         return self._parser.parseStack(self._mainStack)
