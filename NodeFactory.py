@@ -1,5 +1,5 @@
 #NodeFactory
-from OperatorNode import AdditionOperator
+from OperatorNode import AdditionOperator, SubtractionOperator, DivisionOperator
 from OperatorNode import MultiplicationOperator
 from abc import ABC, abstractmethod
 from ValueNode import ValueNode
@@ -25,7 +25,11 @@ class NodeFactory(INodeFactory):
             if nodeType is self.operators.operatorList[0]:
                 return AdditionOperator(rightNode, leftNode)
             elif nodeType is self.operators.operatorList[1]:
+                return SubtractionOperator(rightNode, leftNode)
+            elif nodeType is self.operators.operatorList[2]:
                 return MultiplicationOperator(rightNode, leftNode)
+            elif nodeType is self.operators.operatorList[3]:
+                return DivisionOperator(rightNode, leftNode)
         else:
             raise ValueError('Operator is not contained in the list')           
         # add more nodes here

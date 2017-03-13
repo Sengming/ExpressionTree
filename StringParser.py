@@ -34,7 +34,9 @@ class StringParser:
                 elif self.is_startBracket(symbol) is True:
                     self.parseStartBracket()
             elif self.is_endBracket(symbol) is True:
-                retVal = self._mainStack.push(self.parseEndBracket())
+                evaluatedBracketNode = self.parseEndBracket()
+                evaluatedBracketNode.priority = 99
+                retVal = self._mainStack.push(evaluatedBracketNode)
         
         if self._mainStack.isEmpty() is False:
             print("parsing whole stack now")

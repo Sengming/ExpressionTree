@@ -15,8 +15,6 @@ def main():
     mainparser = argparse.ArgumentParser()
     mainparser.add_argument("string")
     args = mainparser.parse_args()
-#     print(args.echo)
-#     node1, node2 = ValueNode(100), ValueNode(300)
     # Instantiate the states:
     appendPairState = Parser_appendPairState()
     makePairState = Parser_makePairState(appendPairState)

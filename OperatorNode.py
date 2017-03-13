@@ -29,7 +29,7 @@ class AdditionOperator(IOperatorNode):
         self.priority = 0
         
     def getValue(self):
-        evaluated = int(self._rightNode.getValue()) + int(self._leftNode.getValue())
+        evaluated = float(self._rightNode.getValue()) + float(self._leftNode.getValue())
         print("AdditionOperator: " + str(evaluated))
         return evaluated
 #     def getValue(self):
@@ -47,13 +47,35 @@ class MultiplicationOperator(IOperatorNode):
         self.priority = 1
         
     def getValue(self):
-        evaluated = int(self._rightNode.getValue()) * int(self._leftNode.getValue())
+        evaluated = float(self._rightNode.getValue()) * float(self._leftNode.getValue())
         print("MultiplicationOperator: " + str(evaluated))
         return evaluated
 
 #     def getValue(self):
 #         evaluated = "*"
 #         return evaluated
+
+class SubtractionOperator(IOperatorNode):
+    ''' Class for Subtraction operator '''
+    def __init__(self, rightNode, leftNode):
+        IOperatorNode.__init__(self, rightNode, leftNode)
+        self._value = 0
+        self.priority = 0
+        
+    def getValue(self):
+        evaluated = float(self._rightNode.getValue()) - float(self._leftNode.getValue())
+        return evaluated
+    
+class DivisionOperator(IOperatorNode):
+    ''' Class for Division operator '''
+    def __init__(self, rightNode, leftNode):
+        IOperatorNode.__init__(self, rightNode, leftNode)
+        self._value = 0
+        self.priority = 1
+        
+    def getValue(self):
+        evaluated = float(self._rightNode.getValue()) / float(self._leftNode.getValue())
+        return evaluated
     
 class DummyOperator(IOperatorNode):
     ''' Lowest priority "dummy" operator '''
@@ -67,6 +89,6 @@ class DummyOperator(IOperatorNode):
     
 class OperatorTypeStorage:
         def __init__(self):
-            self.operatorList = ['+', '*']
+            self.operatorList = ['+', '-','*', '/']
             self.startBracket = '('
             self.endBracket = ')'
